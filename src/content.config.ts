@@ -23,6 +23,7 @@ const projects = defineCollection({
     schema: z.object({
         title: z.string(),
         description: z.string(),
+        logo: z.string(),
         // Transform string to Date object
         repoLink: z.string().nullable(),
         license: z.string().nullable(),

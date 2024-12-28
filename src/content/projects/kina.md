@@ -1,6 +1,7 @@
 ---
 title: "Kina"
-description: "A time-tracking Android app."
+description: "Time-tracking Android app"
+logo: "kina-mono"
 repoLink: null
 license: null
 startDate: "Nov 19, 2022"

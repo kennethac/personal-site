@@ -6,6 +6,7 @@ import {SITE_TITLE, SITE_DESCRIPTION} from '../consts';
 import {getCollection} from "astro:content";
 import FormattedDate from "../components/FormattedDate.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import {Icon} from 'astro-icon/components';
 
 const posts = await getCollection('blog').then(c => c.slice(0, 3));
 const projects = (await getCollection('projects')).sort(
@@ -16,6 +17,7 @@ const projects = (await getCollection('projects')).sort(
 <BaseLayout>
     <!doctype html>
     <html lang="en">
+    <!--suppress HtmlRequiredTitleElement -->
     <head>
         <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION}/>
     </head>
@@ -37,10 +39,16 @@ const projects = (await getCollection('projects')).sort(
                     </li>
             ))}
         </ul>
-        <h3>Current Projects</h3>
-        <ul>
+        <h3>Highlighted Projects</h3>
+        <ul class="project-list">
             {projects.map(post => (
-                    <li>{post.data.title}</li>
+                    <li>
+                        <Icon class={post.id} name={post.data.logo} height="64" width="64"/>
+                        <div>
+                            <h4><a href={`/projects/${post.id}`}>{post.data.title}</a></h4>
+                            <p>{post.data.description}</p>
+                        </div>
+                    </li>
             ))}
         </ul>
     </main>
@@ -48,3 +56,45 @@ const projects = (await getCollection('projects')).sort(
     </body>
     </html>
 </BaseLayout>
+
+<style>
+    ul.project-list {
+        list-style-type: none;
+        padding-inline-start: 0;
+
+        li {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            :first-child {
+                flex-grow: 0;
+                flex-shrink: 0;
+            }
+
+            &:not(:first-child) {
+                margin-block-start: 0.75rem;
+            }
+
+        }
+
+        div * {
+            margin-block: 0;
+            color: black;
+            text-decoration: none;
+        }
+    }
+
+    [data-icon] {
+        font-size: 2rem;
+        color: white;
+        background-color: black;
+        border-radius: 50%;
+        padding: 8px;
+    }
+
+    .kina[data-icon] {
+        color: green;
+        background-color: white;
+    }
+</style>
