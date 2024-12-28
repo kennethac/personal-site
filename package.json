@@ -9,9 +9,14 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^12.1.0",
     "@astrojs/mdx": "^4.0.3",
     "@astrojs/rss": "^4.0.10",
     "@astrojs/sitemap": "^3.2.1",
-    "astro": "^5.1.1"
+    "astro": "^5.1.1",
+    "astro-icon": "^1.1.5"
+  },
+  "devDependencies": {
+    "@iconify-json/mdi": "^1.2.2"
   }
 }
