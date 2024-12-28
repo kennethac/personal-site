@@ -5,6 +5,7 @@ import Footer from '../components/Footer.astro';
 import {SITE_TITLE, SITE_DESCRIPTION} from '../consts';
 import {getCollection} from "astro:content";
 import FormattedDate from "../components/FormattedDate.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
 
 const posts = await getCollection('blog').then(c => c.slice(0, 3));
 const projects = (await getCollection('projects')).sort(
@@ -12,36 +13,38 @@ const projects = (await getCollection('projects')).sort(
 );
 ---
 
-<!doctype html>
-<html lang="en">
-<head>
-    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION}/>
-</head>
-<body>
-<Header/>
-<main>
-    <h1>Hi, I'm Kenneth</h1>
-    <h3>
-        I'm a father, husband, disciple of Christ and software engineer.
-    </h3>
-    <p>
-        {SITE_DESCRIPTION}. I write most frequently about my personal software projects and my faith.
-    </p>
-    <h3>Recent posts</h3>
-    <ul>
-        {posts.map(post => (
-                <li>{post.data.title}
-                    <FormattedDate date={post.data.pubDate}/>
-                </li>
-        ))}
-    </ul>
-    <h3>Current Projects</h3>
-    <ul>
-        {projects.map(post => (
-                <li>{post.data.title}</li>
-        ))}
-    </ul>
-</main>
-<Footer/>
-</body>
-</html>
+<BaseLayout>
+    <!doctype html>
+    <html lang="en">
+    <head>
+        <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION}/>
+    </head>
+    <body>
+    <Header/>
+    <main>
+        <h1>Hi, I'm Kenneth</h1>
+        <h3>
+            I'm a father, husband, disciple of Christ and software engineer.
+        </h3>
+        <p>
+            {SITE_DESCRIPTION}. I write most frequently about my personal software projects and my faith.
+        </p>
+        <h3>Recent posts</h3>
+        <ul>
+            {posts.map(post => (
+                    <li>{post.data.title}
+                        <FormattedDate date={post.data.pubDate}/>
+                    </li>
+            ))}
+        </ul>
+        <h3>Current Projects</h3>
+        <ul>
+            {projects.map(post => (
+                    <li>{post.data.title}</li>
+            ))}
+        </ul>
+    </main>
+    <Footer/>
+    </body>
+    </html>
+</BaseLayout>
