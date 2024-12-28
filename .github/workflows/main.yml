@@ -1,0 +1,68 @@
+name: Build and Deploy to Cloudflare Pages
+
+on:
+  schedule:
+    - cron: "0 15 * * *"
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        id: checkout_repo
+        uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - name: Extract variables
+        id: extract_vars
+        run: | # branch_trunc is the branch truncated to 28 chars, which is the CF deploy preview subdomain length
+          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "datetime=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_OUTPUT
+          branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
+          branch_trunc=${branch:0:28}
+          echo "branch=${branch}" >> $GITHUB_OUTPUT
+          echo "branch_trunc=${branch_trunc}" >> $GITHUB_OUTPUT
+
+      - name: Build site
+        id: build_site
+        env:
+          PUBLIC_COMMIT_HASH: ${{ steps.extract_vars.outputs.sha_short }}
+        run: |
+          pnpm i --frozen-lockfile
+          pnpm run build
+          echo "result=built" >> $GITHUB_OUTPUT
+      - name: Deploy to Cloudflare
+        if: steps.build_site.outputs.result == 'built'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ./dist --project-name=kennethchristensen
+          # Optional: Enable this if you want to have GitHub Deployments triggered
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Add preview URL to pull request
+        if: github.event_name == 'pull_request' && steps.build_site.outputs.result == 'built'
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          comment_tag: deploy_preview
+          mode: recreate
+          message: |
+            ## Deployed to Cloudflare Pages! :rocket:
+
+            | Name                    | Result |
+            | ----------------------- | - |
+            | **Preview URL**:        | https://${{ steps.extract_vars.outputs.branch_trunc }}.${{ secrets.CLOUDFLARE_PROJECT_NAME }}.pages.dev |
+            | **Last commit:**        | `${{ steps.extract_vars.outputs.sha_short }}` |
+            | **Deployed at**:        | `${{ steps.extract_vars.outputs.datetime }}` |
