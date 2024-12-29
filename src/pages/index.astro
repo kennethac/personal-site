@@ -24,33 +24,37 @@ const projects = (await getCollection('projects')).sort(
     <body>
     <Header/>
     <main>
-        <h1>Hi, I'm Kenneth</h1>
-        <h3>
-            I'm a father, husband, disciple of Christ and software engineer.
-        </h3>
-        <p>
-            {SITE_DESCRIPTION}. I write most frequently about my personal software projects and my faith.
-        </p>
-        <h3>Recent posts</h3>
-        <ul>
-            {posts.map(post => (
-                    <li>{post.data.title}
-                        <FormattedDate date={post.data.pubDate}/>
-                    </li>
-            ))}
-        </ul>
-        <h3>Highlighted Projects</h3>
-        <ul class="project-list">
-            {projects.map(post => (
-                    <li>
-                        <Icon class={post.id} name={post.data.logo} height="64" width="64"/>
-                        <div>
-                            <h4><a href={`/projects/${post.id}`}>{post.data.title}</a></h4>
-                            <p>{post.data.description}</p>
-                        </div>
-                    </li>
-            ))}
-        </ul>
+        <div class="main-content">
+            <h1>Hi, I'm Kenneth</h1>
+            <h3>
+                I'm a father, husband, disciple of Christ and software engineer.
+            </h3>
+            <p>
+                {SITE_DESCRIPTION}. I write most frequently about my personal software projects and my faith.
+            </p>
+            <h3>Recent posts</h3>
+            <ul>
+                {posts.map(post => (
+                        <li>{post.data.title}
+                            <FormattedDate date={post.data.pubDate}/>
+                        </li>
+                ))}
+            </ul>
+        </div>
+        <div>
+            <h3>Highlighted Projects</h3>
+            <ul class="project-list">
+                {projects.map(post => (
+                        <li>
+                            <Icon class={post.id} name={post.data.logo} height="64" width="64"/>
+                            <div>
+                                <h4><a href={`/projects/${post.id}`}>{post.data.title}</a></h4>
+                                <p>{post.data.description}</p>
+                            </div>
+                        </li>
+                ))}
+            </ul>
+        </div>
     </main>
     <Footer/>
     </body>
@@ -58,6 +62,22 @@ const projects = (await getCollection('projects')).sort(
 </BaseLayout>
 
 <style>
+    main {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--gap-1, 2ch);
+
+        div.main-content {
+            flex-basis: 0;
+            flex-grow: 999;
+            min-inline-size: 50%;
+        }
+
+        div:not(.main-content) {
+            flex-grow: 1;
+        }
+    }
+
     ul.project-list {
         list-style-type: none;
         padding-inline-start: 0;

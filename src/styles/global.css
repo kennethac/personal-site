@@ -35,7 +35,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 main {
-    width: 720px;
+    width: 90ch;
     max-width: calc(100% - 2em);
     margin: auto;
     padding: 3em 1em;
