@@ -7,6 +7,7 @@ import {getCollection} from "astro:content";
 import FormattedDate from "../components/FormattedDate.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import {Icon} from 'astro-icon/components';
+import StackedDate from "../components/StackedDate.astro";
 
 const posts = await getCollection('blog').then(c => c.slice(0, 3));
 const projects = (await getCollection('projects')).sort(
@@ -33,10 +34,17 @@ const projects = (await getCollection('projects')).sort(
                 {SITE_DESCRIPTION}. I write most frequently about my personal software projects and my faith.
             </p>
             <h3>Recent posts</h3>
-            <ul>
+            <ul class="post-list">
                 {posts.map(post => (
-                        <li>{post.data.title}
-                            <FormattedDate date={post.data.pubDate}/>
+                        <li>
+                            <StackedDate date={post.data.pubDate}/>
+                            <div>
+                                <h4>
+                                    <a href={`/posts/${post.id}`}> {post.data.title}</a>
+                                </h4>
+                                <p>{post.data.description}</p>
+
+                            </div>
                         </li>
                 ))}
             </ul>
@@ -65,7 +73,7 @@ const projects = (await getCollection('projects')).sort(
     main {
         display: flex;
         flex-wrap: wrap;
-        gap: var(--gap-1, 2ch);
+        gap: var(--gap-1, 4ch);
 
         div.main-content {
             flex-basis: 0;
@@ -78,13 +86,12 @@ const projects = (await getCollection('projects')).sort(
         }
     }
 
-    ul.project-list {
+    ul {
         list-style-type: none;
         padding-inline-start: 0;
 
         li {
             display: flex;
-            align-items: center;
             gap: 15px;
 
             :first-child {
@@ -95,7 +102,31 @@ const projects = (await getCollection('projects')).sort(
             &:not(:first-child) {
                 margin-block-start: 0.75rem;
             }
+        }
+    }
 
+    ul.post-list {
+        li {
+            & > *:first-child {
+                margin-top: 5px;
+            }
+
+            & > div {
+                h4 {
+                    margin-block-end: 0.1rem;
+                }
+
+                p {
+                    margin-block: 0;
+                }
+            }
+        }
+    }
+
+    ul.project-list {
+
+        ul li {
+            align-items: center;
         }
 
         div * {

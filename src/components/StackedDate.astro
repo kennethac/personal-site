@@ -1,0 +1,43 @@
+---
+interface Props {
+    date: Date;
+}
+
+const {date} = Astro.props;
+---
+
+<time datetime={date.toISOString()}>
+    <span>
+    {
+        date.toLocaleDateString('en-us', {
+            month: 'short',
+            day: '2-digit',
+        })
+    }
+    </span>
+    <br/>
+    <span>
+    {
+        date.toLocaleDateString('en-us', {
+            year: 'numeric',
+        })
+    }
+    </span>
+</time>
+
+<style>
+    time {
+        //text-align: justify;
+        font-weight: bold;
+        line-height: 1.2em;
+        color: oklch(from rgb(var(--gray)) calc(0.5 * l) c h);
+
+        span:first-of-type {
+            letter-spacing: -0.05em;
+        }
+        span:last-of-type {
+            font-weight: bolder;
+            font-size: 1.25em;
+        }
+    }
+</style>
