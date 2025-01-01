@@ -12,4 +12,5 @@ export default defineConfig({
   site: 'https://kennethchristensen.me',
   integrations: [mdx(), sitemap(), icon()],
   adapter: cloudflare(),
+  output: 'static'
 });
