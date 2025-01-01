@@ -40,7 +40,7 @@ const projects = (await getCollection('projects')).sort(
                             <StackedDate date={post.data.pubDate}/>
                             <div>
                                 <h4>
-                                    <a href={`/posts/${post.id}`}> {post.data.title}</a>
+                                    <a href={`/blog/${post.id}`}> {post.data.title}</a>
                                 </h4>
                                 <p>{post.data.description}</p>
 
