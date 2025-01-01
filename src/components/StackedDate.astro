@@ -30,14 +30,16 @@ const {date} = Astro.props;
         //text-align: justify;
         font-weight: bold;
         line-height: 1.2em;
-        color: oklch(from rgb(var(--gray)) calc(0.5 * l) c h);
+        color: oklch(from rgb(var(--gray)) calc(1.15 * l) calc(0.8 * c) h);
 
         span:first-of-type {
             letter-spacing: -0.05em;
         }
+
         span:last-of-type {
             font-weight: bolder;
             font-size: 1.25em;
+            //letter-spacing: 0.21em;
         }
     }
 </style>
