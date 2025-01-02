@@ -11,6 +11,6 @@ import cloudflare from '@astrojs/cloudflare';
 export default defineConfig({
   site: 'https://kennethchristensen.me',
   integrations: [mdx(), sitemap(), icon()],
-  adapter: cloudflare(),
+  // adapter: cloudflare(),
   output: 'static'
 });
