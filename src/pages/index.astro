@@ -49,11 +49,11 @@ const projects = (await getCollection('projects')).sort(
                 ))}
             </ul>
         </div>
-        <div>
+        <div class="l-vstack-rec">
             <h3>Highlighted Projects</h3>
             <ul class="project-list">
                 {projects.map(post => (
-                        <li>
+                        <li class="stop-rec">
                             <Icon class={post.id} name={post.data.logo} height="64" width="64"/>
                             <div>
                                 <h4><a href={`/projects/${post.id}`}>{post.data.title}</a></h4>
@@ -62,6 +62,7 @@ const projects = (await getCollection('projects')).sort(
                         </li>
                 ))}
             </ul>
+            <a class="utw-text-center utw-w-full utw-block" href="/projects">View All</a>
         </div>
     </main>
     <Footer/>
@@ -97,10 +98,6 @@ const projects = (await getCollection('projects')).sort(
             :first-child {
                 flex-grow: 0;
                 flex-shrink: 0;
-            }
-
-            &:not(:first-child) {
-                margin-block-start: 0.75rem;
             }
         }
     }
@@ -141,7 +138,10 @@ const projects = (await getCollection('projects')).sort(
         color: white;
         background-color: black;
         border-radius: 50%;
-        padding: 8px;
+
+        &.trifold {
+            padding: 8px;
+        }
     }
 
     .kina[data-icon] {

@@ -4,6 +4,8 @@
   License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
  */
 
+@import "./layouts/layouts.css";
+
 :root {
     --accent: oklch(0.496 0.283 156.995);
     --accent-dark: oklch(0.297 0.191 154.206);
