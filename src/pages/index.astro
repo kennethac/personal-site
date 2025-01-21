@@ -6,6 +6,7 @@ import {getCollection} from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import {Icon} from 'astro-icon/components';
 import StackedDate from "../components/StackedDate.astro";
+import FormattedDate from "../components/FormattedDate.astro";
 
 const posts = await getCollection('blog').then(c => c.slice(0, 3));
 const projects = (await getCollection('projects')).sort(
@@ -16,7 +17,7 @@ const projects = (await getCollection('projects')).sort(
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
     <Header/>
     <main>
-        <div class="main-content">
+        <div class="main-content l-vstack">
             <h1>Hi, I'm Kenneth</h1>
             <h3>
                 I'm a father, husband, disciple of Christ and software engineer.
@@ -25,17 +26,18 @@ const projects = (await getCollection('projects')).sort(
                 {SITE_DESCRIPTION}. I write most frequently about my personal software projects and my faith.
             </p>
             <h3>Recent posts</h3>
-            <ul class="post-list">
+            <ul class="post-list l-vstack">
                 {posts.map(post => (
                         <li>
-                            <StackedDate date={post.data.pubDate}/>
+                            <!--<StackedDate date={post.data.pubDate}/>-->
                             <div>
                                 <h4>
-                                    <a href={`/blog/${post.id}`}> {post.data.title}</a>
+                                    <a href={`/blog/${post.id}`}>{post.data.title}</a>
                                 </h4>
-                                <p>{post.data.description}</p>
-
+                                <FormattedDate date={post.data.pubDate}/>
                             </div>
+                            <p>{post.data.description}</p>
+
                         </li>
                 ))}
             </ul>
@@ -81,9 +83,6 @@ const projects = (await getCollection('projects')).sort(
         padding-inline-start: 0;
 
         li {
-            display: flex;
-            gap: 15px;
-
             :first-child {
                 flex-grow: 0;
                 flex-shrink: 0;
@@ -93,26 +92,21 @@ const projects = (await getCollection('projects')).sort(
 
     ul.post-list {
         li {
-            & > *:first-child {
-                margin-top: 5px;
-            }
-
-            & > div {
-                h4 {
-                    margin-block-end: 0.1rem;
-                }
-
-                p {
-                    margin-block: 0;
+            & > div > * {
+                display: inline-block;
+                &:not(:first-child) {
+                    margin-inline-start: 1ch;
                 }
             }
         }
     }
 
     ul.project-list {
+        li {
 
-        ul li {
-            align-items: center;
+            display: flex;
+            gap: 15px;
+
         }
 
         div * {
