@@ -1,6 +1,23 @@
 ---
 import "@fontsource-variable/inter";
 import "@fontsource-variable/noto-serif";
+import BaseHead from "../components/BaseHead.astro";
+import {SITE_TITLE} from "../consts";
+
+interface Props {
+    title: string,
+    description: string | undefined
+}
+
+const {title, description} = Astro.props;
 ---
 
-<slot />
+<html lang="en">
+<head>
+    <BaseHead title={`${title} | ${SITE_TITLE}`} description={description ?? ""}/>
+</head>
+
+<body>
+<slot/>
+</body>
+</html>

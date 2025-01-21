@@ -1,10 +1,8 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import {SITE_TITLE, SITE_DESCRIPTION} from '../consts';
 import {getCollection} from "astro:content";
-import FormattedDate from "../components/FormattedDate.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import {Icon} from 'astro-icon/components';
 import StackedDate from "../components/StackedDate.astro";
@@ -15,14 +13,7 @@ const projects = (await getCollection('projects')).sort(
 );
 ---
 
-<BaseLayout>
-    <!doctype html>
-    <html lang="en">
-    <!--suppress HtmlRequiredTitleElement -->
-    <head>
-        <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION}/>
-    </head>
-    <body>
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
     <Header/>
     <main>
         <div class="main-content">
@@ -66,8 +57,6 @@ const projects = (await getCollection('projects')).sort(
         </div>
     </main>
     <Footer/>
-    </body>
-    </html>
 </BaseLayout>
 
 <style>
