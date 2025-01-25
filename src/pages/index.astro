@@ -5,7 +5,6 @@ import {SITE_TITLE, SITE_DESCRIPTION} from '../consts';
 import {getCollection} from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import {Icon} from 'astro-icon/components';
-import StackedDate from "../components/StackedDate.astro";
 import FormattedDate from "../components/FormattedDate.astro";
 
 const posts = await getCollection('blog').then(c => c.slice(0, 3));
@@ -17,7 +16,7 @@ const projects = (await getCollection('projects')).sort(
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
     <Header/>
     <main>
-        <div class="main-content l-vstack">
+        <div class="main-content">
             <h1>Hi, I'm Kenneth</h1>
             <h3>
                 I'm a father, husband, disciple of Christ and software engineer.
@@ -26,6 +25,7 @@ const projects = (await getCollection('projects')).sort(
                 {SITE_DESCRIPTION}. I write most frequently about my personal software projects and my faith.
             </p>
             <h3>Recent posts</h3>
+            <p><a href="/rss.xml">Subscribe via RSS</a></p>
             <ul class="post-list l-vstack">
                 {posts.map(post => (
                         <li>
@@ -94,6 +94,7 @@ const projects = (await getCollection('projects')).sort(
         li {
             & > div > * {
                 display: inline-block;
+
                 &:not(:first-child) {
                     margin-inline-start: 1ch;
                 }
