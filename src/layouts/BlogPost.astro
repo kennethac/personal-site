@@ -2,10 +2,15 @@
 import type {CollectionEntry} from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
 import BasicLayout from "./BasicLayout.astro";
+import {getArticleLengthInfo} from "../util/readingTime";
 
-type Props = CollectionEntry<'blog'>['data'];
+type Props = {
+    post: CollectionEntry<'blog'>
+}
 
-const {title, description, pubDate, updatedDate} = Astro.props;
+const {post: {body, data: {title, description, pubDate, updatedDate}}} = Astro.props;
+
+const words = getArticleLengthInfo(body);
 ---
 
 <BasicLayout title={title} description={description}>
@@ -24,10 +29,19 @@ const {title, description, pubDate, updatedDate} = Astro.props;
                     }
                 </div>
                 <h1>{title}</h1>
-                <p>{description}</p>
+                <p class="description">{description}</p>
+                {/* <p>{words.words} words - {words.minutesEstimate} minute read</p> */}
                 <hr/>
             </div>
             <slot/>
         </div>
     </article>
 </BasicLayout>
+
+<style>
+    .description {
+        font-size: var(--step-1);
+        color: rgb(var(--gray));
+        font-style: italic;
+    }
+</style>

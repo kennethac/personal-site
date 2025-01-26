@@ -4,7 +4,7 @@
     justify-content: flex-start;
 }
 
-.l-vstack * {
+.l-vstack > * {
     margin-block: 0;
 }
 

@@ -1,12 +1,14 @@
 ---
 import {Icon} from 'astro-icon/components';
 import HeaderLink from './HeaderLink.astro';
+import {SITE_TITLE} from '../consts';
 ---
 
 <header>
     <nav>
+        <h2><a href="/">Kenneth Christensen</a></h2>
         <div class="internal-links">
-            <HeaderLink href="/">Home</HeaderLink>
+            <!--<HeaderLink href="/">Home</HeaderLink>-->
             <HeaderLink href="/blog">Blog</HeaderLink>
             <HeaderLink href="/about">About</HeaderLink>
         </div>

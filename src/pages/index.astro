@@ -25,7 +25,6 @@ const projects = (await getCollection('projects')).sort(
                 {SITE_DESCRIPTION}. I write most frequently about my personal software projects and my faith.
             </p>
             <h3>Recent posts</h3>
-            <p><a href="/rss.xml">Subscribe via RSS</a></p>
             <ul class="post-list l-vstack">
                 {posts.map(post => (
                         <li>
@@ -42,6 +41,7 @@ const projects = (await getCollection('projects')).sort(
                 ))}
             </ul>
         </div>
+        <!--
         <div class="l-vstack-rec">
             <h3>Highlighted Projects</h3>
             <ul class="project-list">
@@ -57,6 +57,7 @@ const projects = (await getCollection('projects')).sort(
             </ul>
             <a class="utw-text-center utw-w-full utw-block" href="/projects">View All</a>
         </div>
+        -->
     </main>
     <Footer/>
 </BaseLayout>
@@ -91,6 +92,7 @@ const projects = (await getCollection('projects')).sort(
     }
 
     ul.post-list {
+        margin-block-start: 2rem;
         li {
             & > div > * {
                 display: inline-block;

@@ -30,11 +30,7 @@ body {
     overflow-wrap: break-word;
     color: rgb(var(--gray-dark));
     font-size: 16px;
-    line-height: 1.7;
-}
-
-h1, h2, h3, h4, h5, h6 {
-    font-family: 'Inter Variable', sans-serif;
+    line-height: 1.9;
 }
 
 main {
@@ -50,9 +46,10 @@ h3,
 h4,
 h5,
 h6 {
-    margin: 0 0 0.5rem 0;
-    color: rgb(var(--black));
+    font-family: 'Inter Variable', sans-serif;
+    margin: 0 0 0.5em 0;
     line-height: 1.2;
+    font-weight: bold;
 }
 
 h1 {
@@ -93,7 +90,7 @@ a:hover {
 }
 
 p {
-    margin-bottom: 1em;
+    margin-block-end: 2em;
     font-size: var(--step-0);
 }
 
@@ -103,10 +100,6 @@ p {
 
 .prose {
     max-width: 80ch;
-}
-
-.prose p {
-    margin-bottom: 2em;
 }
 
 textarea {
@@ -152,7 +145,8 @@ blockquote {
 
 hr {
     border: none;
-    border-top: 1px solid rgb(var(--gray-light));
+    border-top: 2px solid rgb(var(--gray-light));
+    margin-block: 2em;
 }
 
 @media (max-width: 720px) {
@@ -181,4 +175,11 @@ hr {
     clip-path: inset(50%);
     /* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
     white-space: nowrap;
+}
+
+section[data-footnotes] {
+    ol {
+        list-style: decimal;
+        padding-inline-start: 2ch;
+    }
 }
