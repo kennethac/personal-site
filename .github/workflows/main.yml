@@ -50,7 +50,7 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy ./dist --project-name=kennethchristensen
           # Optional: Enable this if you want to have GitHub Deployments triggered
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          # gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Add preview URL to pull request
         if: github.event_name == 'pull_request' && steps.build_site.outputs.result == 'built'
