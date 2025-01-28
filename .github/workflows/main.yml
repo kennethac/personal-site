@@ -46,12 +46,13 @@ jobs:
           pnpm run build
           echo "result=built" >> $GITHUB_OUTPUT
       - name: Deploy to Cloudflare
+        id: deploy
         if: steps.build_site.outputs.result == 'built'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ./dist --project-name=kennethchristensen
+          command: pages deploy ./dist --project-name=kennethchristensen --branch=${{ steps.extract_vars.outputs.branch }}
           # Optional: Enable this if you want to have GitHub Deployments triggered
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
@@ -66,6 +67,6 @@ jobs:
 
             | Name                    | Result |
             | ----------------------- | - |
-            | **Preview URL**:        | https://${{ steps.extract_vars.outputs.branch_trunc }}.${{ secrets.CLOUDFLARE_PROJECT_NAME }}.pages.dev |
+            | **Preview URL**:        | ${{ steps.deploy.outputs.deployment-url }} |
             | **Last commit:**        | `${{ steps.extract_vars.outputs.sha_short }}` |
             | **Deployed at**:        | `${{ steps.extract_vars.outputs.datetime }}` |
