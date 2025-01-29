@@ -14,6 +14,14 @@ const blog = defineCollection({
     }),
 });
 
+const pages = defineCollection({
+    loader: glob({base: './src/content/pages', pattern: '**/*.{md,mdx}'}),
+    schema: z.object({
+        title: z.string(),
+        description: z.string(),
+    }),
+});
+
 const projects = defineCollection({
     // Load Markdown and MDX files in the `src/content/blog/` directory.
     loader: glob({base: './src/content/projects', pattern: '**/*.{md,mdx}'}),
@@ -33,4 +41,4 @@ const projects = defineCollection({
     }),
 });
 
-export const collections = {blog, projects};
+export const collections = {blog, projects, pages};

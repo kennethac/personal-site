@@ -1,0 +1,19 @@
+---
+import BasicLayout from "../layouts/BasicLayout.astro";
+interface Props {
+    title: string,
+    description: string | undefined
+}
+
+const {title, description} = Astro.props;
+---
+
+<BasicLayout
+        title={title}
+        description={description}
+>
+    <section class="prose centered">
+        <h1>{title}</h1>
+        <slot/>
+    </section>
+</BasicLayout>
