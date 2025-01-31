@@ -13,7 +13,7 @@ const projects = (await getCollection('projects')).sort(
 );
 ---
 
-<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+<BaseLayout title="Home" description={SITE_DESCRIPTION}>
     <Header/>
     <main>
         <div class="main-content">
@@ -93,6 +93,7 @@ const projects = (await getCollection('projects')).sort(
 
     ul.post-list {
         margin-block-start: 2rem;
+
         li {
             & > div > * {
                 display: inline-block;
