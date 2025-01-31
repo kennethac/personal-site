@@ -1,0 +1,86 @@
+---
+import BasicLayout from "../../layouts/BasicLayout.astro";
+import {getCollection} from "astro:content";
+import {Icon} from 'astro-icon/components';
+
+const projects = (await getCollection('projects')).sort(
+    (a, b) => b.data.startDate.valueOf() - a.data.startDate.valueOf(),
+);
+---
+
+<BasicLayout
+        title="Projects"
+        description="An overview of my projects and project philosophy."
+>
+    <h1>My Project Portfolio</h1>
+
+    <p>
+        This page is an index of my current and past software projects. Some of them are (or were) available on various
+        app stores or are open source.
+    </p>
+
+    <h2>
+        Why do I publish my list of projects?
+    </h2>
+    <p>
+        Talking about my projects &mdash; even those I don't publish or that are closed-source &mdash; provides me a few
+        benefits. For one, it gives me an opportunity to write about the things I'm learning and advertise my skills. On
+        a deeper level, though, it also increases my accountability in working on them, subtly discouraging me from
+        starting too many and encouraging me to focus on delivering value by finishing projects.
+    </p>
+
+    <h2>Current Projects</h2>
+
+    <ul class="project-list">
+        {projects.map(post => (
+                <li class="l-vstack">
+                    <div>
+                        <Icon class={post.id} name={post.data.logo} height="64" width="64"/>
+                        <h4><a href={`/projects/${post.id}`}>{post.data.title}</a></h4>
+                    </div>
+                    <div>
+                        <p>{post.data.description}<br/>
+                            <i>Closed source, not yet published</i></p>
+                    </div>
+                </li>
+        ))}
+    </ul>
+
+</BasicLayout>
+
+<style>
+    .project-list {
+        display: flex;
+        gap: var(--gap, 1rem);
+
+        li {
+            background-color: white;
+            //box-shadow: 0 4px 8px 0 rgba(var(--black), 0.2), 0 6px 20px 0 rgba(var(--black), 0.19);
+            padding: 1rem;
+            flex-grow: 0;
+
+            & > div:first-child {
+                display: flex;
+                gap: 1rem;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+    }
+
+    [data-icon] {
+        font-size: 2rem;
+        color: white;
+        background-color: black;
+        border-radius: 50%;
+
+        &.trifold {
+            padding: 8px;
+        }
+    }
+
+    .kina[data-icon] {
+        color: green;
+        background-color: white;
+    }
+</style>

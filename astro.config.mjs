@@ -7,10 +7,12 @@ import icon from 'astro-icon';
 
 import cloudflare from '@astrojs/cloudflare';
 
+import tailwind from '@astrojs/tailwind';
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://kennethchristensen.me',
-  integrations: [mdx(), sitemap(), icon()],
+  integrations: [mdx(), sitemap(), icon(), tailwind()],
   // adapter: cloudflare(),
   output: 'static'
 });

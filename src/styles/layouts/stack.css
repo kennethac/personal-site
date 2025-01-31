@@ -1,0 +1,14 @@
+.l-vstack {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.l-vstack > * {
+    margin-block: 0;
+}
+
+.l-vstack > * + * {
+    margin-block-start: var(--space, 1.5rem);
+}
+
