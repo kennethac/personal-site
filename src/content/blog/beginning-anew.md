@@ -1,7 +1,7 @@
 ---
 title: 'Beginning Anew'
 description: 'Reintroducing myself to the world on my own platform.'
-pubDate: 'Jan 28 2025'
+pubDate: 'Jan 30 2025'
 ---
 
 When I was 16 I launched my first blog. I creatively called it _The Experiment_ and hosted it on
