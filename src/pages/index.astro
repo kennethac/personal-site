@@ -11,6 +11,10 @@ const posts = await getCollection('blog').then(c => c.slice(0, 3));
 const projects = (await getCollection('projects')).sort(
     (a, b) => b.data.startDate.valueOf() - a.data.startDate.valueOf(),
 );
+
+function getTransitionStyle(post: any) {
+    return `view-transition-name: ${post.id};`;
+}
 ---
 
 <BaseLayout title="Home" description={SITE_DESCRIPTION}>
@@ -31,7 +35,7 @@ const projects = (await getCollection('projects')).sort(
                             <!--<StackedDate date={post.data.pubDate}/>-->
                             <div>
                                 <h4>
-                                    <a href={`/blog/${post.id}`}>{post.data.title}</a>
+                                    <a href={`/blog/${post.id}`} style={getTransitionStyle(post)}>{post.data.title}</a>
                                 </h4>
                                 <FormattedDate date={post.data.pubDate}/>
                             </div>

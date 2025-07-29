@@ -183,3 +183,7 @@ section[data-footnotes] {
         padding-inline-start: 2ch;
     }
 }
+
+@view-transition {
+  navigation: auto;
+}

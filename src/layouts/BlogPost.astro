@@ -8,8 +8,8 @@ type Props = {
     post: CollectionEntry<'blog'>
 }
 
-const {post: {body, data: {title, description, pubDate, updatedDate}}} = Astro.props;
-
+const {post: {id, body, data: {title, description, pubDate, updatedDate}}} = Astro.props;
+const viewTransitionName = `view-transition-name: ${id};`;
 const words = getArticleLengthInfo(body);
 ---
 
@@ -28,7 +28,7 @@ const words = getArticleLengthInfo(body);
                         )
                     }
                 </div>
-                <h1>{title}</h1>
+                <h1 style={viewTransitionName}>{title}</h1>
                 <p class="description">{description}</p>
                 {/* <p>{words.words} words - {words.minutesEstimate} minute read</p> */}
                 <hr/>
