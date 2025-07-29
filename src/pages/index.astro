@@ -12,8 +12,8 @@ const projects = (await getCollection('projects')).sort(
     (a, b) => b.data.startDate.valueOf() - a.data.startDate.valueOf(),
 );
 
-function getTransitionStyle(post: any) {
-    return `view-transition-name: ${post.id};`;
+function getTransitionStyle(post: any, part: string) {
+    return `view-transition-name: ${post.id}-${part};`;
 }
 ---
 
@@ -35,11 +35,11 @@ function getTransitionStyle(post: any) {
                             <!--<StackedDate date={post.data.pubDate}/>-->
                             <div>
                                 <h4>
-                                    <a href={`/blog/${post.id}`} style={getTransitionStyle(post)}>{post.data.title}</a>
+                                    <a href={`/blog/${post.id}`} style={getTransitionStyle(post, 'title')}>{post.data.title}</a>
                                 </h4>
-                                <FormattedDate date={post.data.pubDate}/>
+                                <FormattedDate date={post.data.pubDate} styleTag={getTransitionStyle(post, 'date')} />
                             </div>
-                            <p>{post.data.description}</p>
+                            <p style={getTransitionStyle(post, 'description')}>{post.data.description}</p>
 
                         </li>
                 ))}

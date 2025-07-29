@@ -9,7 +9,9 @@ type Props = {
 }
 
 const {post: {id, body, data: {title, description, pubDate, updatedDate}}} = Astro.props;
-const viewTransitionName = `view-transition-name: ${id};`;
+const viewTransitionNameDate = `view-transition-name: ${id}-date;`;
+const viewTransitionNameDescription = `view-transition-name: ${id}-description;`;
+const viewTransitionNameTitle = `view-transition-name: ${id}-title;`;
 const words = getArticleLengthInfo(body);
 ---
 
@@ -18,7 +20,7 @@ const words = getArticleLengthInfo(body);
         <div class="prose centered">
             <div class="title">
                 <div class="date">
-                    <FormattedDate date={pubDate}/>
+                    <FormattedDate date={pubDate} styleTag={viewTransitionNameDate} />
                     {
                         updatedDate && (
                                     <div class="last-updated-on">
@@ -28,8 +30,8 @@ const words = getArticleLengthInfo(body);
                         )
                     }
                 </div>
-                <h1 style={viewTransitionName}>{title}</h1>
-                <p class="description">{description}</p>
+                <h1 style={viewTransitionNameTitle}>{title}</h1>
+                <p class="description" style={viewTransitionNameDescription}>{description}</p>
                 {/* <p>{words.words} words - {words.minutesEstimate} minute read</p> */}
                 <hr/>
             </div>
