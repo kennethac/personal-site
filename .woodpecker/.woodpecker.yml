@@ -1,7 +1,8 @@
 when:
   - event: push
     branch: main
-  - event: pull_request
+  - event: push
+    branch: '*'
   - event: cron
   - event: manual
 
@@ -33,22 +34,3 @@ steps:
       - npx wrangler pages deploy ./dist
           --project-name=kennethchristensen
           --branch="$BRANCH"
-
-  - name: pr-comment
-    image: curlimages/curl:latest
-    secrets:
-      - github_token
-    environment:
-      GITHUB_TOKEN:
-        from_secret: github_token
-    commands:
-      - SHA_SHORT=$(git rev-parse --short HEAD)
-      - DATETIME=$(date +'%Y-%m-%d %H:%M:%S')
-      - |
-        curl -s -X POST \
-          -H "Authorization: token $GITHUB_TOKEN" \
-          -H "Content-Type: application/json" \
-          -d "{\"body\": \"## Deployed to Cloudflare Pages!\n\n| Name | Result |\n| --- | --- |\n| **Preview URL** | https://${CI_COMMIT_SOURCE_BRANCH:0:28}.kennethchristensen.pages.dev |\n| **Last commit** | \`$SHA_SHORT\` |\n| **Deployed at** | \`$DATETIME\` |\"}" \
-          "https://api.github.com/repos/${CI_REPO}/issues/${CI_COMMIT_PULL_REQUEST}/comments"
-    when:
-      - event: pull_request
