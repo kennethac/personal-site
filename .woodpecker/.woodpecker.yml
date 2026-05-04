@@ -8,7 +8,7 @@ when:
 
 steps:
   - name: build
-    image: node:20
+    image: node:24
     commands:
       - corepack enable
       - export PUBLIC_COMMIT_HASH=$(git rev-parse --short HEAD)
@@ -16,7 +16,7 @@ steps:
       - pnpm run build
 
   - name: deploy
-    image: node:20
+    image: node:24
     environment:
       CLOUDFLARE_API_TOKEN:
         from_secret: cloudflare_api_token
