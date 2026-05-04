@@ -1,0 +1,53 @@
+when:
+  - event: push
+    branch: main
+  - event: pull_request
+  - event: cron
+
+steps:
+  - name: build
+    image: node:20
+    environment:
+      PUBLIC_COMMIT_HASH:
+        from_secret: false
+    commands:
+      - corepack enable
+      - export PUBLIC_COMMIT_HASH=$(git rev-parse --short HEAD)
+      - pnpm i --frozen-lockfile
+      - pnpm run build
+
+  - name: deploy
+    image: node:20
+    secrets:
+      - cloudflare_api_token
+      - cloudflare_account_id
+    environment:
+      CLOUDFLARE_API_TOKEN:
+        from_secret: cloudflare_api_token
+      CLOUDFLARE_ACCOUNT_ID:
+        from_secret: cloudflare_account_id
+    commands:
+      - BRANCH=${CI_COMMIT_SOURCE_BRANCH:-${CI_COMMIT_BRANCH}}
+      - corepack enable
+      - npx wrangler pages deploy ./dist
+          --project-name=kennethchristensen
+          --branch="$BRANCH"
+
+  - name: pr-comment
+    image: curlimages/curl:latest
+    secrets:
+      - github_token
+    environment:
+      GITHUB_TOKEN:
+        from_secret: github_token
+    commands:
+      - SHA_SHORT=$(git rev-parse --short HEAD)
+      - DATETIME=$(date +'%Y-%m-%d %H:%M:%S')
+      - |
+        curl -s -X POST \
+          -H "Authorization: token $GITHUB_TOKEN" \
+          -H "Content-Type: application/json" \
+          -d "{\"body\": \"## Deployed to Cloudflare Pages!\n\n| Name | Result |\n| --- | --- |\n| **Preview URL** | https://${CI_COMMIT_SOURCE_BRANCH:0:28}.kennethchristensen.pages.dev |\n| **Last commit** | \`$SHA_SHORT\` |\n| **Deployed at** | \`$DATETIME\` |\"}" \
+          "https://api.github.com/repos/${CI_REPO}/issues/${CI_COMMIT_PULL_REQUEST}/comments"
+    when:
+      - event: pull_request
