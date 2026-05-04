@@ -11,7 +11,6 @@ steps:
     image: node:20
     environment:
       PUBLIC_COMMIT_HASH:
-        from_secret: false
     commands:
       - corepack enable
       - export PUBLIC_COMMIT_HASH=$(git rev-parse --short HEAD)
