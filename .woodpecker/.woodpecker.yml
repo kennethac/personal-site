@@ -3,6 +3,7 @@ when:
     branch: main
   - event: pull_request
   - event: cron
+  - event: manual
 
 steps:
   - name: build
