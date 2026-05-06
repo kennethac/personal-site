@@ -24,6 +24,7 @@ steps:
         from_secret: cloudflare_account_id
     commands:
       - BRANCH=${CI_COMMIT_SOURCE_BRANCH:-${CI_COMMIT_BRANCH}}
+      - BRANCH="${BRANCH}${PREVIEW:-}"
       - corepack enable
       - npx wrangler pages deploy ./dist
           --project-name=kennethchristensen

@@ -1,0 +1,38 @@
+---
+import {render, type CollectionEntry} from 'astro:content';
+import PublishedEntry from '../../layouts/PublishedEntry.astro';
+import {getVisibleLinkEntries} from '../../util/publishedContent';
+
+export async function getStaticPaths() {
+    const entries = await getVisibleLinkEntries();
+
+    return entries.map((entry) => ({
+        params: {slug: entry.data.slug},
+        props: {entry},
+    }));
+}
+
+type Props = {
+    entry: CollectionEntry<'links'>;
+};
+
+const {entry} = Astro.props;
+const {Content} = await render(entry);
+---
+
+<PublishedEntry entry={entry}>
+    <Fragment slot="headerMeta">
+        <p class="entry-meta">
+            Shared from {entry.data.author}.
+            {' '}
+            <a href={entry.data.link} rel="noopener noreferrer" target="_blank">Visit the original link</a>.
+        </p>
+    </Fragment>
+    <Content/>
+</PublishedEntry>
+
+<style>
+    .entry-meta {
+        font-size: var(--step--1);
+    }
+</style>

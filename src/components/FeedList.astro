@@ -1,0 +1,95 @@
+---
+import FormattedDate from './FormattedDate.astro';
+import type {FeedItem} from '../util/publishedContent';
+import {buildPostHistoryPath} from '../util/publishedContent';
+
+interface Props {
+    items: FeedItem[];
+    emptyMessage?: string;
+    showKindLabel?: boolean;
+}
+
+const {items, emptyMessage = 'Nothing published yet.', showKindLabel = false} = Astro.props;
+
+function getLabel(item: FeedItem): string {
+    switch (item.kind) {
+        case 'post':
+            return 'Post';
+        case 'til':
+            return 'TIL';
+        case 'link':
+            return 'Link';
+    }
+}
+---
+
+{
+    items.length === 0 ? (
+        <p>{emptyMessage}</p>
+    ) : (
+        <ul class="feed-list l-vstack">
+            {items.map((item) => (
+                <li>
+                    <div class="feed-header">
+                        <div class="title-row">
+                            <h3>
+                                <a href={item.href}>{item.title}</a>
+                            </h3>
+                            <FormattedDate date={item.pubDate}/>
+                        </div>
+                        {showKindLabel && <p class="kind">{getLabel(item)}</p>}
+                    </div>
+                    <p>{item.description}</p>
+                    {
+                        item.kind === 'post' && item.entry.data.version > 1 && (
+                            <p class="meta">
+                                <a href={buildPostHistoryPath(item.entry)}>View version history</a>
+                            </p>
+                        )
+                    }
+                    {
+                        item.kind === 'link' && (
+                            <p class="meta">
+                                Shared from {item.entry.data.author}: <a href={item.entry.data.link} rel="noopener noreferrer" target="_blank">{item.entry.data.link}</a>
+                            </p>
+                        )
+                    }
+                </li>
+            ))}
+        </ul>
+    )
+}
+
+<style>
+    .feed-list {
+        list-style: none;
+        padding-inline-start: 0;
+    }
+
+    .title-row > * {
+        display: inline-block;
+        margin-block-end: 0;
+    }
+
+    .title-row > *:not(:last-child) {
+        margin-inline-end: 1ch;
+    }
+
+    .feed-header + p {
+        margin-block-start: 0.25rem;
+    }
+
+    .kind {
+        color: rgb(var(--gray));
+        font-size: var(--step--2);
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        line-height: 1.1;
+        margin-block: 0.1rem 0 0;
+        text-transform: uppercase;
+    }
+
+    .meta {
+        font-size: var(--step--1);
+    }
+</style>

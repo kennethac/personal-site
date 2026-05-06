@@ -1,23 +1,161 @@
 ---
-import {type CollectionEntry, getCollection} from 'astro:content';
-import BlogPost from '../../layouts/BlogPost.astro';
 import {render} from 'astro:content';
-import {filterDrafts} from "../../util/collectionUtils";
+import BasicLayout from '../../layouts/BasicLayout.astro';
+import PublishedEntry from '../../layouts/PublishedEntry.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import {
+    buildPostHistoryPath,
+    buildPostPath,
+    buildPostVersionPath,
+    getCanonicalPosts,
+    getVisiblePostVersions,
+    groupPostsBySlug,
+    type PostEntry,
+} from '../../util/publishedContent';
+
+type CanonicalRouteProps = {
+    view: 'canonical';
+    entry: PostEntry;
+    versions: PostEntry[];
+};
+
+type VersionRouteProps = {
+    view: 'version';
+    entry: PostEntry;
+    versions: PostEntry[];
+};
+
+type HistoryRouteProps = {
+    view: 'history';
+    canonical: PostEntry;
+    versions: PostEntry[];
+};
+
+type Props = CanonicalRouteProps | VersionRouteProps | HistoryRouteProps;
 
 export async function getStaticPaths() {
-    const posts = await getCollection('blog');
-    // const filteredPosts = filterDrafts(posts);
-    return posts.map((post) => ({
-        params: {slug: post.id},
-        props: post,
-    }));
-}
-type Props = CollectionEntry<'blog'>;
+    const visiblePostVersions = await getVisiblePostVersions();
+    const groupedPosts = groupPostsBySlug(visiblePostVersions);
+    const canonicalPosts = await getCanonicalPosts();
 
-const post = Astro.props;
-const {Content} = await render(post);
+    return [
+        ...canonicalPosts.map((entry) => ({
+            params: {slug: entry.data.slug},
+            props: {
+                view: 'canonical',
+                entry,
+                versions: groupedPosts.get(entry.data.slug) ?? [entry],
+            } satisfies CanonicalRouteProps,
+        })),
+        ...Array.from(groupedPosts.entries()).map(([slug, versions]) => ({
+            params: {slug: `${slug}/versions`},
+            props: {
+                view: 'history',
+                canonical: versions.at(-1)!,
+                versions,
+            } satisfies HistoryRouteProps,
+        })),
+        ...visiblePostVersions.map((entry) => ({
+            params: {slug: `${entry.data.slug}/${entry.data.version}`},
+            props: {
+                view: 'version',
+                entry,
+                versions: groupedPosts.get(entry.data.slug) ?? [entry],
+            } satisfies VersionRouteProps,
+        })),
+    ];
+}
+
+const props = Astro.props as Props;
+const renderedEntry = props.view === 'history' ? undefined : await render(props.entry);
+const Content = renderedEntry?.Content;
 ---
 
-<BlogPost post={post}>
-    <Content/>
-</BlogPost>
+{
+    props.view === 'history' ? (
+        <BasicLayout
+            title={`${props.canonical.data.title} Versions`}
+            description={`Version history for ${props.canonical.data.title}.`}
+        >
+            <section class="prose centered">
+                <h1>{props.canonical.data.title}</h1>
+                <p>Version history for this post.</p>
+                <p>
+                    <a href={buildPostPath(props.canonical)}>Read the latest version</a>
+                </p>
+                <ul class="version-list">
+                    {props.versions.map((version) => (
+                        <li>
+                            <a href={buildPostVersionPath(version)}>Version {version.data.version}</a>
+                            <FormattedDate date={version.data.pubDate}/>
+                            <p>{version.data.description}</p>
+                        </li>
+                    ))}
+                </ul>
+            </section>
+        </BasicLayout>
+    ) : (
+        <PublishedEntry
+            entry={props.entry}
+            pageTitle={
+                props.view === 'version'
+                    ? `${props.entry.data.title} (Version ${props.entry.data.version})`
+                    : props.entry.data.title
+            }
+        >
+            {Content && <Content/>}
+            {
+                props.view === 'canonical' ? (
+                    <Fragment>
+                        <hr/>
+                        <p class="entry-meta entry-meta-bottom">
+                            Showing version {props.entry.data.version}.
+                            {' '}
+                            <a href={buildPostHistoryPath(props.entry)}>Browse version history</a>
+                        </p>
+                    </Fragment>
+                ) : (
+                    <Fragment>
+                        <hr/>
+                        <p class="entry-meta entry-meta-bottom">
+                            Historical version {props.entry.data.version}.
+                            {' '}
+                            <a href={buildPostPath(props.entry)}>Read the latest version</a>
+                            {' '}
+                            or
+                            {' '}
+                            <a href={buildPostHistoryPath(props.entry)}>browse all versions</a>.
+                        </p>
+                    </Fragment>
+                )
+            }
+        </PublishedEntry>
+    )
+}
+
+<style>
+    .entry-meta {
+        font-size: var(--step--1);
+    }
+
+    .entry-meta-bottom {
+        margin-block-start: 1.5rem;
+    }
+
+    .version-list {
+        padding-inline-start: 0;
+    }
+
+    .version-list li {
+        list-style: none;
+        margin-block-end: 1.5rem;
+    }
+
+    .version-list li > * {
+        display: inline-block;
+    }
+
+    .version-list li > *:not(:last-child) {
+        margin-inline-end: 1ch;
+    }
+</style>

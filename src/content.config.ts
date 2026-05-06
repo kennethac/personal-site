@@ -1,16 +1,37 @@
 import {glob} from 'astro/loaders';
 import {defineCollection, z} from 'astro:content';
+import {publishedContentLoader} from './content/loaders/publishedContentLoader';
 
-const blog = defineCollection({
-    // Load Markdown and MDX files in the `src/content/blog/` directory.
-    loader: glob({base: './src/content/blog', pattern: '**/*.{md,mdx}'}),
-    // Type-check frontmatter using a schema
-    schema: z.object({
-        title: z.string(),
-        description: z.string(),
-        // Transform string to Date object
-        pubDate: z.coerce.date(),
-        updatedDate: z.coerce.date().optional(),
+const publishedBaseSchema = z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
+    slug: z.string(),
+    source: z.enum(['astro', 'obsidian']),
+});
+
+const posts = defineCollection({
+    loader: publishedContentLoader('posts'),
+    schema: publishedBaseSchema.extend({
+        type: z.literal('post'),
+        version: z.number().int().positive(),
+    }),
+});
+
+const til = defineCollection({
+    loader: publishedContentLoader('til'),
+    schema: publishedBaseSchema.extend({
+        type: z.literal('til'),
+    }),
+});
+
+const links = defineCollection({
+    loader: publishedContentLoader('links'),
+    schema: publishedBaseSchema.extend({
+        type: z.literal('link'),
+        link: z.string().url(),
+        author: z.string(),
     }),
 });
 
@@ -23,22 +44,18 @@ const pages = defineCollection({
 });
 
 const projects = defineCollection({
-    // Load Markdown and MDX files in the `src/content/blog/` directory.
     loader: glob({base: './src/content/projects', pattern: '**/*.{md,mdx}'}),
-    // type: 'data',
-    // Type-check frontmatter using a schema
     schema: z.object({
         title: z.string(),
         description: z.string(),
         logo: z.string(),
-        // Transform string to Date object
         repoLink: z.string().nullable(),
         license: z.string().nullable(),
         startDate: z.coerce.date(),
         endDate: z.coerce.date().nullable(),
         stackKeywords: z.array(z.string()),
-        isAbandoned: z.boolean()
+        isAbandoned: z.boolean(),
     }),
 });
 
-export const collections = {blog, projects, pages};
+export const collections = {posts, til, links, projects, pages};

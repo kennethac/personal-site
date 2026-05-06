@@ -1,20 +1,12 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import {SITE_TITLE, SITE_DESCRIPTION} from '../consts';
-import {getCollection} from "astro:content";
+import {SITE_DESCRIPTION} from '../consts';
 import BaseLayout from "../layouts/BaseLayout.astro";
-import {Icon} from 'astro-icon/components';
-import FormattedDate from "../components/FormattedDate.astro";
+import FeedList from '../components/FeedList.astro';
+import {getUnifiedFeedItems} from '../util/publishedContent';
 
-const posts = await getCollection('blog').then(c => c.slice(0, 3));
-const projects = (await getCollection('projects')).sort(
-    (a, b) => b.data.startDate.valueOf() - a.data.startDate.valueOf(),
-);
-
-function getTransitionStyle(post: any, part: string) {
-    return `view-transition-name: ${post.id}-${part};`;
-}
+const recentItems = await getUnifiedFeedItems(10);
 ---
 
 <BaseLayout title="Home" description={SITE_DESCRIPTION}>
@@ -28,40 +20,14 @@ function getTransitionStyle(post: any, part: string) {
             <p>
                 {SITE_DESCRIPTION}. I write most frequently about my personal software projects and my faith.
             </p>
-            <h3>Recent posts</h3>
-            <ul class="post-list l-vstack">
-                {posts.map(post => (
-                        <li>
-                            <!--<StackedDate date={post.data.pubDate}/>-->
-                            <div>
-                                <h4>
-                                    <a href={`/blog/${post.id}`} style={getTransitionStyle(post, 'title')}>{post.data.title}</a>
-                                </h4>
-                                <FormattedDate date={post.data.pubDate} styleTag={getTransitionStyle(post, 'date')} />
-                            </div>
-                            <p style={getTransitionStyle(post, 'description')}>{post.data.description}</p>
-
-                        </li>
-                ))}
-            </ul>
+            <h3>Recent updates</h3>
+            <p>
+                New posts, links, and TILs all land in one feed here.
+                {' '}
+                <a href="/rss.xml">Subscribe to the combined RSS feed</a>.
+            </p>
+            <FeedList items={recentItems} emptyMessage="Nothing published yet." showKindLabel={true} />
         </div>
-        <!--
-        <div class="l-vstack-rec">
-            <h3>Highlighted Projects</h3>
-            <ul class="project-list">
-                {projects.map(post => (
-                        <li class="stop-rec">
-                            <Icon class={post.id} name={post.data.logo} height="64" width="64"/>
-                            <div>
-                                <h4><a href={`/projects/${post.id}`}>{post.data.title}</a></h4>
-                                <p>{post.data.description}</p>
-                            </div>
-                        </li>
-                ))}
-            </ul>
-            <a class="utw-text-center utw-w-full utw-block" href="/projects">View All</a>
-        </div>
-        -->
     </main>
     <Footer/>
 </BaseLayout>
@@ -81,62 +47,5 @@ function getTransitionStyle(post: any, part: string) {
         div:not(.main-content) {
             flex-grow: 1;
         }
-    }
-
-    ul {
-        list-style-type: none;
-        padding-inline-start: 0;
-
-        li {
-            :first-child {
-                flex-grow: 0;
-                flex-shrink: 0;
-            }
-        }
-    }
-
-    ul.post-list {
-        margin-block-start: 2rem;
-
-        li {
-            & > div > * {
-                display: inline-block;
-
-                &:not(:first-child) {
-                    margin-inline-start: 1ch;
-                }
-            }
-        }
-    }
-
-    ul.project-list {
-        li {
-
-            display: flex;
-            gap: 15px;
-
-        }
-
-        div * {
-            margin-block: 0;
-            color: black;
-            text-decoration: none;
-        }
-    }
-
-    [data-icon] {
-        font-size: 2rem;
-        color: white;
-        background-color: black;
-        border-radius: 50%;
-
-        &.trifold {
-            padding: 8px;
-        }
-    }
-
-    .kina[data-icon] {
-        color: green;
-        background-color: white;
     }
 </style>

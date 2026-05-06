@@ -1,0 +1,18 @@
+---
+import BasicLayout from '../../layouts/BasicLayout.astro';
+import FeedList from '../../components/FeedList.astro';
+import {getVisibleTilEntries, toFeedItem} from '../../util/publishedContent';
+
+const entries = await getVisibleTilEntries();
+const items = entries.map((entry) => toFeedItem(entry));
+---
+
+<BasicLayout title="TIL" description="Things I've learned recently.">
+    <h1>TIL</h1>
+    <p>
+        Short notes about things I have learned recently.
+        {' '}
+        <a href="/til/rss.xml">Subscribe to the TIL feed</a>.
+    </p>
+    <FeedList items={items} emptyMessage="No TILs published yet." />
+</BasicLayout>
