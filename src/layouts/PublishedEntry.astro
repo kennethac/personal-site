@@ -30,7 +30,7 @@ const words = body ? getArticleLengthInfo(body) : undefined;
         <div class="prose centered">
             <div class="title">
                 <div class="date">
-                    <FormattedDate date={pubDate} styleTag={viewTransitionNameDate}/>
+                    {pubDate && <FormattedDate date={pubDate} styleTag={viewTransitionNameDate}/>}
                     {
                         updatedDate && (
                             <div class="last-updated-on">

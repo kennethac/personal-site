@@ -14,7 +14,7 @@ export type FeedItem =
           entry: PostEntry;
           title: string;
           description: string;
-          pubDate: Date;
+          pubDate: Date | undefined;
       }
     | {
           kind: 'til';
@@ -22,7 +22,7 @@ export type FeedItem =
           entry: TilEntry;
           title: string;
           description: string;
-          pubDate: Date;
+          pubDate: Date | undefined;
       }
     | {
           kind: 'link';
@@ -30,10 +30,17 @@ export type FeedItem =
           entry: LinkEntry;
           title: string;
           description: string;
-          pubDate: Date;
+          pubDate: Date | undefined;
       };
 
 const buildTime = new Date(Date.now());
+
+// Used as a sentinel when pubDate is absent — always treated as "in the future"
+const FAR_FUTURE_DATE = new Date(8640000000000000);
+
+function effectivePubDate(pubDate: Date | undefined): Date {
+    return pubDate ?? FAR_FUTURE_DATE;
+}
 
 export function isProductionContentBuild(): boolean {
     if (import.meta.env.MODE !== 'production') {
@@ -52,16 +59,18 @@ export function isProductionContentBuild(): boolean {
     return branchName === 'main';
 }
 
-function isVisible(pubDate: Date): boolean {
+function isVisible(pubDate: Date | undefined): boolean {
     if (!isProductionContentBuild()) {
         return true;
     }
 
-    return pubDate.valueOf() <= buildTime.valueOf();
+    return effectivePubDate(pubDate).valueOf() <= buildTime.valueOf();
 }
 
-function sortByPubDateDescending<T extends {data: {pubDate: Date}}>(entries: T[]): T[] {
-    return [...entries].sort((left, right) => right.data.pubDate.valueOf() - left.data.pubDate.valueOf());
+function sortByPubDateDescending<T extends {data: {pubDate: Date | undefined}}>(entries: T[]): T[] {
+    return [...entries].sort(
+        (left, right) => effectivePubDate(right.data.pubDate).valueOf() - effectivePubDate(left.data.pubDate).valueOf(),
+    );
 }
 
 function sortPostVersionsAscending(entries: PostEntry[]): PostEntry[] {
@@ -78,7 +87,10 @@ export async function getCanonicalPosts(): Promise<PostEntry[]> {
 
     return Array.from(groupedPosts.values())
         .map((versions) => versions.at(-1)!)
-        .sort((left, right) => right.data.pubDate.valueOf() - left.data.pubDate.valueOf());
+        .sort(
+            (left, right) =>
+                effectivePubDate(right.data.pubDate).valueOf() - effectivePubDate(left.data.pubDate).valueOf(),
+        );
 }
 
 export async function getPostVersionsForSlug(slug: string): Promise<PostEntry[]> {
@@ -107,7 +119,7 @@ export async function getUnifiedFeedItems(limit?: number): Promise<FeedItem[]> {
         ...posts.map((entry) => toFeedItem(entry)),
         ...tils.map((entry) => toFeedItem(entry)),
         ...links.map((entry) => toFeedItem(entry)),
-    ].sort((left, right) => right.pubDate.valueOf() - left.pubDate.valueOf());
+    ].sort((left, right) => effectivePubDate(right.pubDate).valueOf() - effectivePubDate(left.pubDate).valueOf());
 
     return typeof limit === 'number' ? items.slice(0, limit) : items;
 }

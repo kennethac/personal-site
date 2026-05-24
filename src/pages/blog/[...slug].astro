@@ -87,7 +87,7 @@ const Content = renderedEntry?.Content;
                     {props.versions.map((version) => (
                         <li>
                             <a href={buildPostVersionPath(version)}>Version {version.data.version}</a>
-                            <FormattedDate date={version.data.pubDate}/>
+                            {version.data.pubDate && <FormattedDate date={version.data.pubDate}/>}
                             <p>{version.data.description}</p>
                         </li>
                     ))}

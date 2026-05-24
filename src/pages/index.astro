@@ -21,11 +21,6 @@ const recentItems = await getUnifiedFeedItems(10);
                 {SITE_DESCRIPTION}. I write most frequently about my personal software projects and my faith.
             </p>
             <h3>Recent updates</h3>
-            <p>
-                New posts, links, and TILs all land in one feed here.
-                {' '}
-                <a href="/rss.xml">Subscribe to the combined RSS feed</a>.
-            </p>
             <FeedList items={recentItems} emptyMessage="Nothing published yet." showKindLabel={true} />
         </div>
     </main>

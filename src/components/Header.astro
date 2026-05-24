@@ -1,6 +1,11 @@
 ---
 import {Icon} from 'astro-icon/components';
 import HeaderLink from './HeaderLink.astro';
+import { getVisibleLinkEntries, getVisiblePostVersions, getVisibleTilEntries } from '../util/publishedContent';
+
+const hasTil = await getVisibleTilEntries().then((entries) => entries.length > 0);
+const hasLinks = await getVisibleLinkEntries().then((entries) => entries.length > 0);
+const hasPosts = await getVisiblePostVersions().then((entries) => entries.length > 0);
 ---
 
 <header>
@@ -8,9 +13,9 @@ import HeaderLink from './HeaderLink.astro';
         <h2><a href="/">Kenneth Christensen</a></h2>
         <div class="internal-links">
             <!--<HeaderLink href="/">Home</HeaderLink>-->
-            <HeaderLink href="/blog">Blog</HeaderLink>
-            <HeaderLink href="/til">TIL</HeaderLink>
-            <HeaderLink href="/links">Links</HeaderLink>
+            {hasPosts && <HeaderLink href="/blog">Blog</HeaderLink>}
+            {hasTil && <HeaderLink href="/til">TIL</HeaderLink>}
+            {hasLinks && <HeaderLink href="/links">Links</HeaderLink>}
             <HeaderLink href="/about">About</HeaderLink>
         </div>
         <div class="social-links">

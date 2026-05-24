@@ -282,6 +282,13 @@ async function collectPostEntries(
 
         for (const entry of sortedVersions) {
             const rawPubDate = entry.rawData.pubDate;
+
+            if (rawPubDate === undefined || rawPubDate === null) {
+                // No pubDate means "in the future" — counts as far future for ordering
+                previousPubDate = new Date(8640000000000000);
+                continue;
+            }
+
             const parsedPubDate = new Date(rawPubDate as string | number | Date);
 
             if (Number.isNaN(parsedPubDate.valueOf())) {
