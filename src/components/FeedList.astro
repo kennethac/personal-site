@@ -78,13 +78,13 @@ function getIconName(item: FeedItem): string {
             )}
             {item.kind === "link" && (
               <p class="meta">
-                Shared from {item.entry.data.author}:{" "}
+                Original Author:{" "}
                 <a
                   href={item.entry.data.link}
                   rel="noopener noreferrer"
                   target="_blank"
                 >
-                  {item.entry.data.link}
+                  {item.entry.data.author}
                 </a>
               </p>
             )}
