@@ -24,8 +24,5 @@
     "@iconify-json/mdi": "^1.2.2",
     "@iconify-json/material-symbols": "^1.2.73",
     "wrangler": "^4.87.0"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": ["esbuild", "sharp", "workerd"]
   }
 }
