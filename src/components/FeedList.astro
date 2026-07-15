@@ -56,15 +56,15 @@ function getIconName(item: FeedItem): string {
     <ul class="feed-list l-vstack">
       {items.map((item) => (
         <li>
-          {showKindLabel && <div class="kind"><Icon name={getIconName(item)} /></div>}{" "}
           <div>
             <div class="feed-header">
               <div class="title-row">
-                <h3>
-                  <a href={item.href}>
-                    {item.title}
-                  </a>
-                </h3>
+                <h4>
+                  {showKindLabel && (
+                    <Icon class="kind" name={getIconName(item)} />
+                  )}
+                  <a href={item.href}>{item.title}</a>
+                </h4>
                 {item.pubDate && <FormattedDate date={item.pubDate} />}
               </div>
             </div>
@@ -104,11 +104,19 @@ function getIconName(item: FeedItem): string {
   .feed-list > li {
     display: flex;
     gap: var(--gap-1, 1ch);
-    
-    & > .kind {
+
+    & h4 {
+      padding: 0.25rem;
+      & > * { 
+        display: inline-block;
+        margin-inline-end: 0.25rem;
+      }
+
+      & > .kind {
         flex-shrink: 0;
         flex-grow: 0;
         font-size: 2rem;
+      }
     }
   }
 

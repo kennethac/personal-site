@@ -1,46 +1,45 @@
 ---
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import {SITE_DESCRIPTION} from '../consts';
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { SITE_DESCRIPTION } from "../consts";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import FeedList from '../components/FeedList.astro';
-import {getUnifiedFeedItems} from '../util/publishedContent';
+import FeedList from "../components/FeedList.astro";
+import { getUnifiedFeedItems } from "../util/publishedContent";
 
 const recentItems = await getUnifiedFeedItems(10);
 ---
 
 <BaseLayout title="Home" description={SITE_DESCRIPTION}>
-    <Header/>
-    <main>
-        <div class="main-content">
-            <h1>Hi, I'm Kenneth</h1>
-            <h3>
-                I'm a father, husband, disciple of Christ and software engineer.
-            </h3>
-            <p>
-                {SITE_DESCRIPTION}. I write most frequently about my personal software projects and my faith.
-            </p>
-            <h3>Recent updates</h3>
-            <FeedList items={recentItems} emptyMessage="Nothing published yet." showKindLabel={true} />
-        </div>
-    </main>
-    <Footer/>
+  <Header />
+  <main>
+    <h1>Hi, I'm Kenneth</h1>
+    <h3>I'm a father, husband, disciple of Christ and software engineer.</h3>
+    <div class="main-content">
+      <p>
+        {SITE_DESCRIPTION}. I write most frequently about my personal software
+        projects and my faith.
+      </p>
+      <h3>Recent updates</h3>
+      <FeedList
+        items={recentItems}
+        emptyMessage="Nothing published yet."
+        showKindLabel={true}
+      />
+    </div>
+  </main>
+  <Footer />
 </BaseLayout>
 
 <style>
-    main {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--gap-1, 4ch);
+  main {
+    display: grid;
+    grid-template-columns:
+      1fr
+      var(--page-width)
+      1fr;
 
-        div.main-content {
-            flex-basis: 0;
-            flex-grow: 999;
-            min-inline-size: 50%;
-        }
-
-        div:not(.main-content) {
-            flex-grow: 1;
-        }
+    > * {
+      grid-column: 2;
     }
+  }
 </style>

@@ -7,7 +7,7 @@ const entries = await getVisibleLinkEntries();
 const items = entries.map((entry) => toFeedItem(entry));
 ---
 
-<BasicLayout title="Links" description="Links worth sharing, with commentary.">
+<BasicLayout title="Links" description="Links worth sharing, with commentary." mainClasses={["prose"]} >
     <h1>Links</h1>
     <p>
         Links worth sharing, each with a short note.
