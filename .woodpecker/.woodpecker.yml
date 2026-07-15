@@ -9,6 +9,9 @@ when:
 steps:
   - name: build
     image: node:24
+    backend_options:
+      docker:
+        memory: 512m
     commands:
       - corepack enable
       - export PUBLIC_COMMIT_HASH=$(git rev-parse --short HEAD)
