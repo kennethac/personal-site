@@ -60,7 +60,7 @@ function getIconName(item: FeedItem): string {
             <div class="feed-header">
               <div class="title-row">
                 <h4>
-                  {showKindLabel && (
+                  {showKindLabel && false && (
                     <Icon class="kind" name={getIconName(item)} />
                   )}
                   <a href={item.href}>{item.title}</a>
