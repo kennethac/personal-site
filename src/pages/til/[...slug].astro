@@ -1,0 +1,25 @@
+---
+import {render, type CollectionEntry} from 'astro:content';
+import PublishedEntry from '../../layouts/PublishedEntry.astro';
+import {getVisibleTilEntries} from '../../util/publishedContent';
+
+export async function getStaticPaths() {
+    const entries = await getVisibleTilEntries();
+
+    return entries.map((entry) => ({
+        params: {slug: entry.data.slug},
+        props: {entry},
+    }));
+}
+
+type Props = {
+    entry: CollectionEntry<'til'>;
+};
+
+const {entry} = Astro.props;
+const {Content} = await render(entry);
+---
+
+<PublishedEntry entry={entry}>
+    <Content/>
+</PublishedEntry>

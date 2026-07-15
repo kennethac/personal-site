@@ -13,7 +13,9 @@ steps:
       - corepack enable
       - export PUBLIC_COMMIT_HASH=$(git rev-parse --short HEAD)
       - pnpm i --frozen-lockfile
-      - pnpm run build
+      - OBSIDIAN_CONTENT_ROOT="/publish-blog" pnpm run build
+    volumes:
+      - /appdata/syncthing/syncthing/Syncthing Root/KennethPersonal/Personal/Writing/PersonalSite/Publish:/publish-blog
 
   - name: deploy
     image: node:24

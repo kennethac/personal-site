@@ -59,6 +59,40 @@ All commands are run from the root of the project, from a terminal:
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
 
+## Published Content
+
+Builds now require `OBSIDIAN_CONTENT_ROOT` to point at the mounted Obsidian subset.
+
+Example local build:
+
+```sh
+OBSIDIAN_CONTENT_ROOT="$(pwd)/.fixtures/obsidian" pnpm run build
+```
+
+Expected vault subset structure:
+
+```text
+<subset-root>/
+├── posts/
+│   └── my-post/
+│       ├── v1.md
+│       └── v2.md
+├── til/
+│   └── learned-something.md
+└── links/
+    └── useful-link.md
+```
+
+Astro-local content can live alongside it in matching folders:
+
+```text
+src/content/posts/
+src/content/til/
+src/content/links/
+```
+
+All published entries require frontmatter with `title`, `description`, and `pubDate`. Links also require `link` and `author`.
+
 ## 👀 Want to learn more?
 
 Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).

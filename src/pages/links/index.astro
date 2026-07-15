@@ -1,0 +1,18 @@
+---
+import BasicLayout from '../../layouts/BasicLayout.astro';
+import FeedList from '../../components/FeedList.astro';
+import {getVisibleLinkEntries, toFeedItem} from '../../util/publishedContent';
+
+const entries = await getVisibleLinkEntries();
+const items = entries.map((entry) => toFeedItem(entry));
+---
+
+<BasicLayout title="Links" description="Links worth sharing, with commentary." mainClasses={["prose"]} >
+    <h1>Links</h1>
+    <p>
+        Links worth sharing, each with a short note.
+        {' '}
+        <a href="/links/rss.xml">Subscribe to the links feed</a>.
+    </p>
+    <FeedList items={items} emptyMessage="No links published yet." />
+</BasicLayout>

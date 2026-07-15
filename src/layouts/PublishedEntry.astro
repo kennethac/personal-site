@@ -1,0 +1,67 @@
+---
+import type {CollectionEntry} from 'astro:content';
+import FormattedDate from '../components/FormattedDate.astro';
+import BasicLayout from './BasicLayout.astro';
+import {getArticleLengthInfo} from '../util/readingTime';
+
+type PublishedEntry = CollectionEntry<'posts'> | CollectionEntry<'til'> | CollectionEntry<'links'>;
+
+interface Props {
+    entry: PublishedEntry;
+    pageTitle?: string;
+    description?: string;
+}
+
+const {
+    entry,
+    pageTitle = entry.data.title,
+    description = entry.data.description,
+} = Astro.props;
+
+const {id, body, data: {title, description: entryDescription, pubDate, updatedDate}} = entry;
+const viewTransitionNameDate = `view-transition-name: ${id}-date;`;
+const viewTransitionNameDescription = `view-transition-name: ${id}-description;`;
+const viewTransitionNameTitle = `view-transition-name: ${id}-title;`;
+const words = body ? getArticleLengthInfo(body) : undefined;
+---
+
+<BasicLayout title={pageTitle} description={description}>
+    <article>
+        <div class="prose centered">
+            <div class="title">
+                <div class="date">
+                    {pubDate && <FormattedDate date={pubDate} styleTag={viewTransitionNameDate}/>}
+                    {
+                        updatedDate && (
+                            <div class="last-updated-on">
+                                Last updated on
+                                <FormattedDate date={updatedDate}/>
+                            </div>
+                        )
+                    }
+                </div>
+                <h1 style={viewTransitionNameTitle}>{title}</h1>
+                <p class="description" style={viewTransitionNameDescription}>{entryDescription}</p>
+                <slot name="headerMeta"/>
+                {words && (
+                    <p class="article-length">{words.words} words</p>
+                )}
+                <hr/>
+            </div>
+            <slot/>
+        </div>
+    </article>
+</BasicLayout>
+
+<style>
+    .description {
+        font-size: var(--step-1);
+        color: rgb(var(--gray));
+        font-style: italic;
+    }
+
+    .article-length {
+        font-size: var(--step--1);
+        color: rgb(var(--gray));
+    }
+</style>
